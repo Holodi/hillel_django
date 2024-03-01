@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { background-color: #212529; color: #fff; }
+        .form-control { background-color: #343a40; color: #fff; }
+        .btn { background-color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>User Profile</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Last Name:</label>
+                <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}" required>
+            </div>
+            <div class="form-group">
+                <label>First Name:</label>
+                <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { background-color: #212529; color: #fff; }
+        .btn { background-color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Word Detail</h2>
+        <p>Word: {{ word.word }}</p>
+        <p>Translation: {{ word.translation }}</p>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="answer" placeholder="Enter translation">
+            <button type="submit" class="btn btn-primary">Check Answer</button>
+        </form>
+    </div>
+</body>
+</html>

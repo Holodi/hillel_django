@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Score</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { background-color: #212529; color: #fff; }
+        .user { background-color: #343a40; color: #fff; padding: 10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Top Score</h2>
+        <ol>
+            {% for user in users %}
+            <li class="user">{{ user.username }} - {{ user.lesson__result__sum }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+</body>
+</html>
