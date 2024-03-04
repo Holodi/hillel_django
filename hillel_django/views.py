@@ -75,8 +75,7 @@ def lesson_detail(request, id):
 @login_required
 def top_score(request):
     users = CustomUser.objects.annotate(total_score=Sum('lesson__result')).order_by('-total_score')
-    return render(request, 'top_score.html', {'users': users})
-
+    return render(request, 'leaderboard.html', {'users': users})
 
 @login_required
 def word_list(request):
