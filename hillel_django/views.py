@@ -1,11 +1,11 @@
+from random import shuffle
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Sum
-
-from hillel_django.models import Lesson, Word, UserRegisterForm, UserLoginForm, WordForm, CustomUser  # Змінено імпорт
+from hillel_django.models import Lesson, Word, UserRegisterForm, UserLoginForm, WordForm, CustomUser, AnswerForm
 
 
 def register_user(request):
@@ -105,3 +105,69 @@ def word_detail(request, id):
             messages.error(request, 'Неправильна відповідь. Спробуйте ще раз.')
     return render(request, 'word_detail.html', {'word': word})
 
+@login_required
+def random_words(request):
+    # Отримання списку всіх слів та перемішування їх
+    words = list(Word.objects.all())
+    shuffle(words)
+    # Передача перемішаного списку слів на сторінку
+    return render(request, 'random_words.html', {'words': words})
+
+@login_required
+def check_answer(request):
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            word_id = form.cleaned_data['word_id']
+            answer = form.cleaned_data['answer']
+            word = get_object_or_404(Word, id=word_id)
+            if answer.lower() == word.translation.lower():
+                # Логіка для успішної відповіді
+                request.user.score += 1
+                request.user.save()
+                messages.success(request, 'Правильна відповідь! Бали додано.')
+            else:
+                messages.error(request, 'Неправильна відповідь. Спробуйте ще раз.')
+            return redirect('word_detail', id=word_id)
+    else:
+        form = AnswerForm()
+    return render(request, 'check_answer.html', {'form': form})
+
+
+@login_required
+def lesson_list(request):
+    # Отримання списку усіх занять
+    lessons = Lesson.objects.all()
+    return render(request, 'lesson_list.html', {'lessons': lessons})
+
+@login_required
+def lesson_detail(request, lesson_id):
+    # Отримання детальної інформації про конкретне заняття
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            # Логіка перевірки відповіді
+            user_answer = form.cleaned_data['answer']
+            correct_answer = lesson.correct_answer
+            if user_answer.lower() == correct_answer.lower():
+                message = 'Правильна відповідь!'
+            else:
+                message = 'Неправильна відповідь. Спробуйте ще раз.'
+            return render(request, 'lesson_result.html', {'message': message})
+    else:
+        form = AnswerForm()
+    return render(request, 'lesson_detail.html', {'lesson': lesson, 'form': form})
+
+def finish_lesson(request):
+    if request.method == 'POST':
+        # Отримання результатів уроку з форми або request.POST
+        results = request.POST.getlist('results[]')
+        # Оновлення балів користувача після завершення урока
+        request.user.score += len(results)
+        request.user.save()
+        messages.success(request, 'Урок завершено. Бали додано.')
+        return render(request, 'finish_lesson.html')  # Перенаправлення на сторінку завершення уроку
+    else:
+        messages.error(request, 'Неможливо завершити урок. Невірний метод запиту.')
+        return redirect('lesson_list')  # Перенаправлення на список уроків

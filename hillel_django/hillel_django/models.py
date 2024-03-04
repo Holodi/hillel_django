@@ -1,8 +1,8 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import AbstractUser, Group, Permission
 from django import forms
+from django.db import models
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 
 
@@ -11,7 +11,8 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     groups = models.ManyToManyField(Group, related_name='custom_users', blank=True)  # Додано related_name
-    user_permissions = models.ManyToManyField(Permission, related_name='custom_users', blank=True)  # Додано related_name
+    user_permissions = models.ManyToManyField(Permission, related_name='custom_users',
+                                              blank=True)  # Додано related_name
 
     class Meta:
         permissions = [
@@ -50,3 +51,19 @@ class WordForm(forms.ModelForm):
     class Meta:
         model = Word
         fields = ['word', 'translation', 'transliteration', 'phonetic_transcription']
+
+
+class AnswerForm(forms.Form):
+    answer = forms.CharField(label='Відповідь', max_length=100)
+    word_id = forms.IntegerField(widget=forms.HiddenInput())
+
+
+User = get_user_model()
+
+
+class UserScore(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.user.username}'s Score: {self.score}"

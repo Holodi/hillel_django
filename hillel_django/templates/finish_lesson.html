@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Finished</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff9800;
+        }
+        p {
+            margin-bottom: 20px;
+        }
+        a {
+            color: #2196f3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Урок завершено!</h1>
+    <p>Бали успішно додано до вашого рахунку.</p>
+    <a href="{% url 'lesson_list' %}">Повернутися до списку уроків</a>
+</body>
+</html>
