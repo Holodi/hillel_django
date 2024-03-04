@@ -4,20 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Word List</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body { background-color: #212529; color: #fff; }
-        .word { background-color: #343a40; color: #fff; padding: 10px; margin-bottom: 10px; }
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        form {
+            background-color: #333;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            background-color: #444;
+            color: #fff;
+            border-radius: 3px;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #00bcd4;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #333;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2>Word List</h2>
-        <ul>
-            {% for word in words %}
-            <li class="word">{{ word.word }}</li>
-            {% endfor %}
-        </ul>
-    </div>
+    <h2>Your Words</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Word</button>
+    </form>
+    <h3>All Words</h3>
+    <ul>
+        {% for word in words %}
+            <li>{{ word.word }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
